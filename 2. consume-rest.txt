@@ -1,1 +1,78 @@
-* Create project similar to REST boilerplate
+Reference: https://spring.io/guides/gs/consuming-rest#initial
+
+steps:
+1. Use this project to create a local REST API, https://github.com/spring-guides/quoters
+2. Run the app at 8080
+3. The App runs with API, http://localhost:8080/api/random, and gives the Output as,
+{
+   type: "success",
+   value: {
+      id: 10,
+      quote: "Really loving Spring Boot, makes stand alone Spring apps easy."
+   }
+}
+
+4. Make a Java file for a record, similar to the output we are fetching
+
+package com.example.consumingrest;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record Quote(String type, Value value) { }
+
+5. The above file contains the record Quote since the API we are getting has type and value. 
+6. Since the other APP is running at 8080, to run the app at other port ex: 8081, add the below line in /Users/jinkarakesh/Downloads/consuming_rest/src/main/resources/application.properties
+
+server.port=8081
+
+7. Now, create a file to serve the user at API, /quote
+
+package com.example.consuming_rest;
+
+// packages for Requesting params and for REST APIs
+
+// Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+
+// SpringBoot objects
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+// Rest Controller for API route and RestTemplateBuilder to fetch Data
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate; // For Mapping APIs in springboot
+
+@RestController
+public class RestApp {
+    private static final Logger log = LoggerFactory.getLogger(ConsumingRestApplication.class);
+
+    @Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
+
+	@Bean
+	@Profile("!test")
+	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
+		return args -> {
+			Quote quote = restTemplate.getForObject(
+					"http://localhost:8080/api/random", Quote.class);
+			log.info(quote.toString());
+		};
+	}
+
+  @GetMapping("/quote")
+	public Quote quote(RestTemplate restTemplate) throws Exception{
+        Quote quote = restTemplate.getForObject(
+					"http://localhost:8080/api/random", Quote.class);
+		return quote;
+	}
+}
+
+
