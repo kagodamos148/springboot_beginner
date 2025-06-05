@@ -1,0 +1,3 @@
+Hey man, I started learning SpringBoot applications.
+1. maven with Java is used to create web applications
+2. Gradle with Java is used to create standalone applications.
