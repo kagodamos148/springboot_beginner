@@ -1,0 +1,44 @@
+1. Reference: https://spring.io/guides/gs/rest-service
+2. Go to https://start.spring.io and configure the following things
+    * java 
+    * maven
+    * packaging - jar
+    * java v17
+    * spring web as dependency
+3. The given pre-configured project has everything
+4. Now go to path, src/main/java/com/example/rest_service/, create a new java class. 
+5. Boiler code for the initial rest API for file GreetingService.Java would be, 
+
+package com.example.rest_service;
+
+// packages for Requesting params and for REST APIs
+import org.springframework.web.bind.annotation.GetMapping; // For Mapping APIs in springboot
+import org.springframework.web.bind.annotation.RequestParam; // For requesting param in REST
+import org.springframework.web.bind.annotation.RestController; // For REST APIs
+
+@RestController
+public class GreetingService {
+    private static final String hello_string = "Hello, %s!";
+
+    @GetMapping("/greeting")
+	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+		return new Greeting(String.format(hello_string, name));
+	}
+}
+
+---> where Greeting.java is for defining the Greeting Class, which is, 
+
+
+package com.example.rest_service;
+
+public record Greeting(String content) {
+    
+}
+
+6. The code is ready, You have to run the following command, ./mvnw spring-boot:run for starting your server.
+
+
+
+
+
+   

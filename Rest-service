@@ -1,6 +1,0 @@
-1. Go to https://start.spring.io and configure the following things
-    * java 
-    * maven
-    * packaging - jar
-    * java v17
-    * spring web as dependency
